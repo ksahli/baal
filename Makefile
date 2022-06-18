@@ -1,3 +1,6 @@
+clean:
+	go clean -testcache -cache
+
 format:
 	go fmt ./...
 
@@ -17,4 +20,4 @@ import:
 	goimports -w .
 
 build:
-	go build -o baal-observer
+	go build -o baal
