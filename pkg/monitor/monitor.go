@@ -3,6 +3,7 @@ package monitor
 import (
 	"net/http"
 	"net/url"
+	"sync"
 	"time"
 )
 
@@ -19,6 +20,7 @@ type Result struct {
 }
 
 type Monitor struct {
+	lock    *sync.Mutex
 	stamper func() time.Time
 	client  *http.Client
 	results chan Result
@@ -41,12 +43,19 @@ func (m *Monitor) Do(job Job) Result {
 	return result
 }
 
-func (m *Monitor) Run(jobs <-chan Job) {
-	defer close(m.results)
+func (m *Monitor) Run(wg *sync.WaitGroup, jobs <-chan Job) {
+	defer wg.Done()
 	for job := range jobs {
 		result := m.Do(job)
 		m.results <- result
 	}
+}
+
+func (m *Monitor) Stop() {
+	m.lock.Lock()
+	defer m.lock.Unlock()
+
+	close(m.results)
 }
 
 func (m Monitor) Results() <-chan Result {
@@ -54,8 +63,12 @@ func (m Monitor) Results() <-chan Result {
 }
 
 func New(client *http.Client, stamper func() time.Time) *Monitor {
-	results := make(chan Result, 100)
+	var (
+		lock    = new(sync.Mutex)
+		results = make(chan Result, 100)
+	)
 	monitor := Monitor{
+		lock:    lock,
 		stamper: stamper,
 		client:  client,
 		results: results,

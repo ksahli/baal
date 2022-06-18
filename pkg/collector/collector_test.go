@@ -35,7 +35,6 @@ func (w *Writer) Write(p []byte) (int, error) {
 		return 0, err
 	}
 	w.results = append(w.results, result)
-	log.Println("writing ...")
 	return len(p), nil
 }
 
@@ -228,5 +227,36 @@ func TestRunCloseError(t *testing.T) {
 	if len(out.messages) != 1 {
 		msg := "want 1 messages, got %d"
 		t.Fatalf(msg, len(out.messages))
+	}
+}
+
+func TestFile(t *testing.T) {
+	logger := log.New(os.Stderr, " [collector] ", log.Ldate)
+	directory := t.TempDir()
+	path := fmt.Sprintf("%s/definitions.json", directory)
+	if _, err := os.Create(path); err != nil {
+		msg := "unwanted error %v"
+		t.Fatalf(msg, err)
+	}
+	collector, err := collector.File(path, logger)
+	if err != nil {
+		msg := "unwanted error %v"
+		t.Fatalf(msg, err)
+	}
+	if collector == nil {
+		t.Fatal("want a collector, got nothing")
+	}
+}
+
+func TestFileError(t *testing.T) {
+	logger := log.New(os.Stderr, " [collector] ", log.Ldate)
+	collector, err := collector.File("/invalid path", logger)
+	if err == nil {
+		t.Fatal("want an error, got nothing")
+	}
+	if collector != nil {
+		msg := "want nothing, got %v"
+		t.Fatalf(msg, collector)
+
 	}
 }
