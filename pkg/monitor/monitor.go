@@ -52,9 +52,6 @@ func (m *Monitor) Run(wg *sync.WaitGroup, jobs <-chan Job) {
 }
 
 func (m *Monitor) Stop() {
-	m.lock.Lock()
-	defer m.lock.Unlock()
-
 	close(m.results)
 }
 

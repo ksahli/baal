@@ -67,7 +67,7 @@ func TestWrite(t *testing.T) {
 	logger := log.New(os.Stderr, "collector", log.Ldate)
 
 	sut := collector.New(&writer, logger)
-	defer sut.Close()
+	defer sut.Stop()
 
 	location, err := url.Parse("https://localhost")
 	if err != nil {
@@ -102,7 +102,7 @@ func TestWriteError(t *testing.T) {
 	logger := log.New(os.Stderr, "collector", log.Ldate)
 
 	sut := collector.New(&writer, logger)
-	defer sut.Close()
+	defer sut.Stop()
 
 	location, err := url.Parse("https://localhost")
 	if err != nil {
@@ -131,7 +131,7 @@ func TestRun(t *testing.T) {
 	logger := log.New(out, "collector", log.Ldate)
 
 	sut := collector.New(&writer, logger)
-	defer sut.Close()
+	defer sut.Stop()
 
 	wg := new(sync.WaitGroup)
 	results := make(chan monitor.Result, 10)
@@ -175,7 +175,7 @@ func TestRunWriteError(t *testing.T) {
 	logger := log.New(out, " [collector] ", log.Ldate)
 
 	sut := collector.New(&writer, logger)
-	defer sut.Close()
+	defer sut.Stop()
 
 	wg := new(sync.WaitGroup)
 	results := make(chan monitor.Result, 10)
@@ -222,7 +222,7 @@ func TestRunCloseError(t *testing.T) {
 	logger := log.New(out, " [collector] ", log.Ldate)
 
 	sut := collector.New(&writer, logger)
-	sut.Close()
+	sut.Stop()
 
 	if len(out.messages) != 1 {
 		msg := "want 1 messages, got %d"

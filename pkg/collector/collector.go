@@ -32,7 +32,6 @@ func (c *Collector) Write(result monitor.Result) error {
 }
 
 func (c *Collector) Run(wg *sync.WaitGroup, results Results) {
-	defer c.Close()
 	defer wg.Done()
 
 	for result := range results {
@@ -42,7 +41,7 @@ func (c *Collector) Run(wg *sync.WaitGroup, results Results) {
 	}
 }
 
-func (c *Collector) Close() {
+func (c *Collector) Stop() {
 	c.clock.Lock()
 	defer c.clock.Unlock()
 

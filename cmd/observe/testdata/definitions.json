@@ -1,0 +1,33 @@
+[
+
+	{
+		"location":  "http:/domain-1.com",
+		"method":    "GET",
+		"frequency": "5s"
+	},
+	{
+		"location":  "http:/domain-2.com",
+		"method":    "GET",
+		"frequency": "5s"
+	},
+	{
+		"location":  "http:/domain-3.com",
+		"method":    "GET",
+		"frequency": "10s"
+	},
+	{
+		"location":  "http:/domain-4.com",
+		"method":    "GET",
+		"frequency": "10s"
+	},
+	{
+		"location":  "http:/domain-5.com",
+		"method":    "GET",
+		"frequency": "1h"
+	},
+	{
+		"location":  "http:/domain-6.com",
+		"method":    "GET",
+		"frequency": "1h"
+	}
+]
