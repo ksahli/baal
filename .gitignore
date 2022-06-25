@@ -1,5 +1,8 @@
 coverage.out
 
+definitions.json
+results.json
+
 baal-freebsd
 baal-openbsd
 baal-linux
